@@ -1,0 +1,110 @@
+body {
+    font-family: Arial, sans-serif;
+    color: #000000;
+    margin: 0;
+    padding: 0;
+    background-image: url('images/background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 900px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+h1 {
+    font-size: 32px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.url-info {
+    font-weight: bold;
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.url-icon {
+    width: 30px;
+    height: auto;
+    margin-right: 5px;
+}
+
+.customise-icon {
+    width: 30px;
+    height: auto;
+    margin-right: 5px;
+}
+
+.url-input-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.url-input-container input {
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+    background-color: #f0f0f0;
+    width: 100%;
+    max-width: 500px;
+}
+
+.custom-link-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.custom-link-container select,
+.custom-link-container input {
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+    background-color: #f0f0f0;
+}
+
+.custom-link-container select {
+    width: 200px;
+    margin-right: 10px;
+}
+
+.custom-link-container input {
+    width: 250px;
+}
+
+.submit-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4caf7f;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+    background-color: #45a049;
+}

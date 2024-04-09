@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>URL Shortener</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>URL SHORTENER</h1>
+        <form method="POST" action="{{url_for('index')}}">
+        <div class="url-input-container">
+            <img src="{{ url_for('static', filename='images/urlong.png') }}" alt="URL Icon" class="url-icon">
+            <input type="text" name="original_url" class="url-input" placeholder="Enter long URL here">
+        </div>
+        <p class="url-info">Customize your link</p>
+        <div class="custom-link-container">
+            <img src="{{ url_for('static', filename='images/customise.png') }}" alt="Customise Icon" class="customise-icon">
+            <select>
+                <option>4</option>
+                <option>5</option>
+                <option>6</option>
+            </select>
+            <input type="text" name = "alias" placeholder="Enter alias">
+        </div>
+        <button type="submit" class="submit-button">Shorten URL</button>
+        </form>
+    </div>
+</body>
+</html>
