@@ -24,7 +24,7 @@
       </div>
       {% endif %} {% endwith %}
 
-      <form action="/login" method="POST">
+      <form action="/" method="POST">
         {{ form.hidden_tag() }}
         <div class="form-group">
           {{ form.email.label(for="email")}} {{ form.email(id="email",

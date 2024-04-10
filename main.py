@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, redirect, render_template, url_for, session, flash
+from flask import Flask, request, redirect, render_template, url_for, session, flash
 from flask_wtf import FlaskForm
 from flask_cors import CORS
 import string
@@ -11,7 +11,6 @@ from wtforms.validators import DataRequired, Email, ValidationError
 app = Flask(__name__)
 CORS(app)
 
-shortened_urls = {}
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = ''
@@ -20,40 +19,57 @@ app.secret_key = 'abcdefg'
 
 mysql = MySQL(app)
 
+# class generateURL:
+
 def generate_short_url(length=7):
     characters = string.ascii_letters + string.digits
     return ''.join(random.choice(characters) for _ in range(length))
 
-@app.route("/", methods=["GET", "POST"])
+@app.route("/shorten", methods=["GET", "POST"])
 def index():
+    if 'user_id' not in session:
+        flash('You must be logged in to view that page.')
+        return redirect(url_for('login'))
     if request.method == "POST":
         original_url = request.form['original_url']
         alias = request.form['alias']
-        
-        if alias:  # If alias is provided
-            if alias in shortened_urls:
+        counter = 0
+        cur = mysql.connection.cursor()
+        user_id = session['user_id']
+        result = cur.execute("SELECT * FROM url_map WHERE short_url = %s", [alias])
+        if alias:    
+            if result > 0:
                 return f"Alias '{alias}' is already in use."
             else:
-                shortened_urls[alias] = original_url
+                cur.execute("INSERT INTO url_map(short_url, original_url, user_id, counter) VALUES(%s, %s, %s, %s)", (alias, original_url, user_id, counter))
+                mysql.connection.commit()
                 return f"Shortened URL: {request.url_root}{alias}"
         
         short_url = generate_short_url()
-        while short_url in shortened_urls:
+        result = cur.execute("SELECT * FROM url_map WHERE short_url = %s", [short_url])
+        while result > 0:
             short_url = generate_short_url()
-        
-        shortened_urls[short_url] = original_url
+            result = cur.execute("SELECT * FROM url_map WHERE short_url = %s", [short_url])
+        cur.execute("INSERT INTO url_map(short_url, original_url, user_id, counter) VALUES(%s, %s, %s, %s)", (short_url, original_url, user_id, counter))
+        mysql.connection.commit()
         return f"Shortened URL: {request.url_root}{short_url}"
     
     return render_template("index.html")
 
 @app.route("/<short_url>")
 def redirect_urls(short_url):
-    original_url = shortened_urls.get(short_url)
-    if original_url:
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT original_url, counter FROM url_map WHERE short_url = %s", [short_url])
+    result = cur.fetchone()
+    if result:
+        original_url, counter = result
+        counter += 1
+        cur.execute("UPDATE url_map SET counter = %s WHERE short_url = %s", (counter, short_url))
+        mysql.connection.commit()
+
         return redirect(original_url)
     else:
         return "URL not found", 404
-    
 
 #handling the Register section
 
@@ -86,7 +102,7 @@ def register():
         mysql.connection.commit()
         cursor.close()
 
-        return redirect(url_for('login'))
+        return redirect(url_for('/'))
 
     return render_template('register.html',form=form)
 
@@ -97,7 +113,7 @@ class LoginForm(FlaskForm):
     password = PasswordField("Password",validators=[DataRequired()])
     submit = SubmitField("Login")
 
-@app.route('/login',methods=['GET','POST'])
+@app.route('/',methods=['GET','POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -110,6 +126,7 @@ def login():
         cursor.close()
         if user and bcrypt.checkpw(password.encode('utf-8'), user[3].encode('utf-8')):
             session['user_id'] = user[0]
+            session['user_name'] = user[1]
             return redirect(url_for('index'))
         else:
             flash("Login failed. Please check your email and password")
@@ -117,9 +134,11 @@ def login():
 
     return render_template('login.html',form=form)
 
+
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
+    session.pop('user_name', None)
     flash("You have been logged out successfully.")
     return redirect(url_for('login'))
 

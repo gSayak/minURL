@@ -5,6 +5,14 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
+    <div style="position: absolute; top: 0; right: 0; padding: 10px;">
+        {% if session['user_name'] %}
+            Logged in as: {{ session['user_name'] }}
+            <a href="/logout" class="btn btn-dark">Logout</a>
+        {% else %}
+            <a href="/" class="btn btn-dark">Login</a>
+        {% endif %}
+    </div>
     <div class="container">
         <h1>URL SHORTENER</h1>
         <form method="POST" action="{{url_for('index')}}">
