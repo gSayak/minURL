@@ -3,7 +3,7 @@ body {
     color: #000000;
     margin: 0;
     padding: 0;
-    background-image: url('images/background.jpg');
+    background-image: url('../images/1.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -21,6 +21,9 @@ body {
     max-width: 900px;
     width: 100%;
     box-sizing: border-box;
+    border: 2px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
 }
 
 h1 {
@@ -108,3 +111,28 @@ h1 {
 .submit-button:hover {
     background-color: #45a049;
 }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+thead th {
+    background-color: #f2f2f2; /* Light gray background */
+    padding: 10px;
+    text-align: left;
+}
+
+tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd; /* Add bottom border to separate rows */
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Lighter gray background */
+}
+
+tbody tr:hover {
+    background-color: #f2f2f2; /* Light gray background on hover */
+}
+

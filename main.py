@@ -30,11 +30,13 @@ def index():
     if 'user_id' not in session:
         flash('You must be logged in to view that page.')
         return redirect(url_for('login'))
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT short_url, counter FROM url_map WHERE user_id = %s", [session['user_id']])
+    short_codes = cur.fetchall()
     if request.method == "POST":
         original_url = request.form['original_url']
         alias = request.form['alias']
         counter = 0
-        cur = mysql.connection.cursor()
         user_id = session['user_id']
         result = cur.execute("SELECT * FROM url_map WHERE short_url = %s", [alias])
         if alias:    
@@ -54,7 +56,7 @@ def index():
         mysql.connection.commit()
         return f"Shortened URL: {request.url_root}{short_url}"
     
-    return render_template("index.html")
+    return render_template("index.html", short_codes=short_codes)
 
 @app.route("/<short_url>")
 def redirect_urls(short_url):
