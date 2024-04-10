@@ -1,5 +1,8 @@
 # Min URL 
 
+![minURL icon](https://github.com/gSayak/minURL/assets/88048601/eaddf27b-f91d-42a1-abb2-38c114bf52b9)
+
+## Application to shorten your URL's
 
 https://github.com/gSayak/minURL/assets/88048601/6a5433a2-f106-4680-b2f0-c1e1b50b4b1a
 
