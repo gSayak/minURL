@@ -12,7 +12,7 @@ from wtforms.validators import DataRequired, Email, ValidationError
 
 app = Flask(__name__)
 CORS(app)
-load_dotenv()
+load_dotenv("./.env")
 
 app.config['MYSQL_HOST'] = os.getenv('MYSQL_HOST')
 app.config['MYSQL_USER'] = os.getenv('MYSQL_USER')
