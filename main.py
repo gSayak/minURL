@@ -41,11 +41,12 @@ def index():
         result = cur.execute("SELECT * FROM url_map WHERE short_url = %s", [alias])
         if alias:    
             if result > 0:
-                return f"Alias '{alias}' is already in use."
+                flash(f"Alias {alias} already in use!")
+                return redirect(url_for('index'))
             else:
                 cur.execute("INSERT INTO url_map(short_url, original_url, user_id, counter) VALUES(%s, %s, %s, %s)", (alias, original_url, user_id, counter))
                 mysql.connection.commit()
-                return f"Shortened URL: {request.url_root}{alias}"
+                return redirect(url_for('show_url', short_url=alias))
         
         short_url = generate_short_url()
         result = cur.execute("SELECT * FROM url_map WHERE short_url = %s", [short_url])
@@ -54,7 +55,7 @@ def index():
             result = cur.execute("SELECT * FROM url_map WHERE short_url = %s", [short_url])
         cur.execute("INSERT INTO url_map(short_url, original_url, user_id, counter) VALUES(%s, %s, %s, %s)", (short_url, original_url, user_id, counter))
         mysql.connection.commit()
-        return f"Shortened URL: {request.url_root}{short_url}"
+        return redirect(url_for('show_url', short_url=short_url))
     
     return render_template("index.html", short_codes=short_codes)
 
@@ -71,7 +72,12 @@ def redirect_urls(short_url):
 
         return redirect(original_url)
     else:
-        return "URL not found", 404
+       flash("URL not Found!")
+       return redirect(url_for('index'))
+    
+@app.route("/show_url/<short_url>")
+def show_url(short_url):
+    return render_template("show_url.html", short_url=request.url_root + short_url)
 
 #handling the Register section
 
@@ -104,7 +110,7 @@ def register():
         mysql.connection.commit()
         cursor.close()
 
-        return redirect(url_for('/'))
+        return redirect(url_for('login'))
 
     return render_template('register.html',form=form)
 

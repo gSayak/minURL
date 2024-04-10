@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Shortened URL</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Your Shortened URL:</h1>
+      <div class="url-container">
+        <div class="url-input-container">
+          <span id="shortUrl" class="short-url">{{ short_url }}</span>
+        </div>
+        <div class="button-group">
+          <button onclick="copyUrl()" class="action-button">Copy</button>
+          <button onclick="shareUrl()" class="action-button">Share</button>
+          <a href="{{ short_url }}" target="_blank" class="action-button"
+            >Go to Link</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function copyUrl() {
+        var copyText = document.getElementById("shortUrl");
+        var range = document.createRange();
+        range.selectNode(copyText);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand("copy");
+        alert("Copied the URL: " + copyText.textContent);
+        window.getSelection().removeAllRanges();
+      }
+
+      function shareUrl() {
+        var shareText = document.getElementById("shortUrl").textContent;
+        navigator
+          .share({ url: shareText })
+          .then(() => console.log("Successful share"))
+          .catch((error) => console.log("Error sharing:", error));
+      }
+    </script>
+  </body>
+</html>
